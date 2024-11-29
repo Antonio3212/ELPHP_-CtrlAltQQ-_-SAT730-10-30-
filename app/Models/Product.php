@@ -9,11 +9,22 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'price', 'quantity', 'category', 'image_path'];
+    // Define the table and primary key
+    protected $table = 'products';
+    protected $primaryKey = 'id';
 
-    // Define the relationship with User (Seller)
-    public function user()
+    // Fillable fields
+    protected $fillable = [
+        'name',
+        'price',
+        'quantity',
+        'category',
+        'image_path',
+    ];
+
+    // Relationship with Purchase
+    public function purchases()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Purchase::class);
     }
 }

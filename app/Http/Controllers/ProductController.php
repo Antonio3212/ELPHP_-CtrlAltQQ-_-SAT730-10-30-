@@ -2,16 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Product;
 
 class ProductController extends Controller
 {
-    // No authentication middleware applied here
+    // GET method for fetching all products
+    public function index()
+    {
+        // Fetch all products from the database
+        $products = Product::all();
+
+        // Prepend the full URL to the image path
+        foreach ($products as $product) {
+            if ($product->image_path) {
+                $product->image_url = asset('storage/' . $product->image_path); // Generate full image URL
+            }
+        }
+
+        // Return the products as JSON with the full image URL
+        return response()->json([
+            'products' => $products
+        ], 200);
+    }
+
+    // POST method for creating a new product
     public function store(Request $request)
     {
-        // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
@@ -28,7 +46,6 @@ class ProductController extends Controller
         // Handle file upload if there is an image
         $imagePath = null;
         if ($request->hasFile('image')) {
-            // Store the image in the 'products' folder on the 'public' disk
             $imagePath = $request->file('image')->store('products', 'public');
         }
 
@@ -41,7 +58,7 @@ class ProductController extends Controller
             'image_path' => $imagePath,  // If image uploaded, save the path
         ]);
 
-        // Return a success response with product details
+        // Return success response with the product details
         return response()->json([
             'message' => 'Product added successfully!',
             'product' => $product,
