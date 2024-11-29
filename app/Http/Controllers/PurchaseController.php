@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
+    // Existing store method for placing an order
     public function store(Request $request)
     {
         // Validate incoming request
@@ -39,5 +40,15 @@ class PurchaseController extends Controller
             'message' => 'Order placed successfully',
             'order' => $order
         ], 201);
+    }
+
+    // New method to fetch all orders (purchases)
+    public function index()
+    {
+        // Fetch all orders along with the related product information
+        $orders = Order::with('product')->get();  // Assuming 'product' is a relationship in the Order model
+
+        // Return the list of orders in a JSON response
+        return response()->json($orders, 200);
     }
 }
