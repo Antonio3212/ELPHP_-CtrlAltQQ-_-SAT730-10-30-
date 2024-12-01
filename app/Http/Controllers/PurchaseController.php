@@ -32,7 +32,7 @@ class PurchaseController extends Controller
             'customer_name' => $validated['customer_name'],
             'shipping_address' => $validated['shipping_address'],
             'payment_method' => $validated['payment_method'],
-            'total_price' => $product->price,  // Assuming the price is stored in the `products` table
+            'total_price' => $product->price,  
         ]);
 
         // Return a response
