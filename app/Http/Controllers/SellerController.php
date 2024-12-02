@@ -10,7 +10,6 @@ class SellerController extends Controller
 {
     public function registerSeller(Request $request)
     {
-        // Validate the request data
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -21,7 +20,6 @@ class SellerController extends Controller
             'address' => 'required|string|max:500',
         ]);
 
-        // Return validation errors if any
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
@@ -29,18 +27,18 @@ class SellerController extends Controller
             ], 422);
         }
 
-        // Create a new seller record
+
         $seller = Seller::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => $request->password, // Password is hashed in the model
+            'password' => $request->password,
             'phone' => $request->phone,
             'shop_name' => $request->shop_name,
             'address' => $request->address,
         ]);
 
-        // Return a response to the client
+
         return response()->json([
             'status' => 'success',
             'message' => 'Seller registered successfully',

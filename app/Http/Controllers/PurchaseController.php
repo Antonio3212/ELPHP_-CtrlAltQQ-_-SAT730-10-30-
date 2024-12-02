@@ -8,10 +8,9 @@ use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
-    // Existing store method for placing an order
     public function store(Request $request)
     {
-        // Validate incoming request
+
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
             'customer_name' => 'required|string|max:255',
@@ -19,14 +18,12 @@ class PurchaseController extends Controller
             'payment_method' => 'required|string|max:255',
         ]);
 
-        // Retrieve the product by ID
         $product = Product::find($validated['product_id']);
 
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
         }
 
-        // Create the order
         $order = Order::create([
             'product_id' => $validated['product_id'],
             'customer_name' => $validated['customer_name'],
@@ -35,20 +32,16 @@ class PurchaseController extends Controller
             'total_price' => $product->price,  
         ]);
 
-        // Return a response
         return response()->json([
             'message' => 'Order placed successfully',
             'order' => $order
         ], 201);
     }
 
-    // New method to fetch all orders (purchases)
     public function index()
     {
-        // Fetch all orders along with the related product information
-        $orders = Order::with('product')->get();  // Assuming 'product' is a relationship in the Order model
+        $orders = Order::with('product')->get();  
 
-        // Return the list of orders in a JSON response
         return response()->json($orders, 200);
     }
 }
